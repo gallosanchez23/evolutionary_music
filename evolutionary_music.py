@@ -2,14 +2,17 @@ import numpy as np
 from audio_comparer import correlate
 from pydub import AudioSegment
 
-from jmetal.core.problem import IntegerProblem
-from jmetal.core.solution import IntegerSolution
+from jmetal.core.problem import BinaryProblem
+from jmetal.core.solution import BinarySolution
 from jmetal.algorithm.multiobjective.nsgaii import NSGAII
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
-from jmetal.operator import SBXCrossover, PolynomialMutation, BestSolutionSelection
+from jmetal.algorithm.singleobjective.evolution_strategy import EvolutionStrategy
+from jmetal.operator import SBXCrossover, PolynomialMutation, BestSolutionSelection, SPXCrossover, BinaryTournamentSelection
 from jmetal.lab.visualization import Plot, InteractivePlot
 from jmetal.util.termination_criterion import StoppingByEvaluations
 from jmetal.util.observer import ProgressBarObserver, VisualizerObserver
+from jmetal.operator import BitFlipMutation
+
 
 # folder = 'half_notes'
 
@@ -25,6 +28,7 @@ from jmetal.util.observer import ProgressBarObserver, VisualizerObserver
 
 # correlate('data/conc.wav', 'data/songs/jingle.wav')
 
+source_audio = AudioSegment.from_file('data/songs/jingle.wav')
 NOTES = [
     'A2', 'A3', 'A4', 'A5', 'A6', 'A7',
     'B2', 'B3', 'B4', 'B5', 'B6', 'B7',
@@ -36,52 +40,67 @@ NOTES = [
     'S'
 ] # List with all note names
 
-class MusicProblem(IntegerProblem):
-    def __init__(self):
-        self.lower_bound = [0 for i in range(14)]
-        self.upper_bound = [41 for i in range(14)]
-        self.number_of_variables = 14
+class MusicProblem(BinaryProblem):
+    def __init__(self, number_of_bits: int):
+        # self.lower_bound = [0 for i in range(14)]
+        self.upper_bound = 41 # The number of notes
+        self.number_of_bits = number_of_bits
+        self.number_of_variables = 1
         self.number_of_objectives = 1
         self.number_of_constraints = 0
-        self.directions = [self.MAXIMIZE]
-        self.labels = ['similarity']
+        self.obj_directions = [self.MAXIMIZE]
+        self.obj_labels = ['similarity']
 
-    def evaluate(self, solution: IntegerSolution) -> IntegerSolution:
-        global NOTES
+    def evaluate(self, solution: BinarySolution) -> BinarySolution:
+        global NOTES, source_audio
         combined = AudioSegment.empty()
-        for var in solution.variables:
+        for var in solution.variables[0]:
             note = AudioSegment.from_wav(f'data/half_notes/{NOTES[int(var)]}.wav')
             combined += note
-        combined.export('data/conc.wav', format='wav')
+        # combined.export('data/conc.wav', format='wav')
 
-        solution.objectives[0] = correlate('data/conc.wav', 'data/songs/jingle.wav')
+        # solution.objectives[0] = correlate('data/conc.wav', 'data/songs/jingle.wav')
+        solution.objectives[0] = correlate((combined.frame_rate, combined.channels, bytes(combined.raw_data)), (source_audio.frame_rate, source_audio.channels, bytes(source_audio.raw_data)))
 
         return solution
 
-    def create_solution(self) -> IntegerSolution:
-        solution = IntegerSolution(
-            self.lower_bound,
-            self.upper_bound,
-            self.number_of_objectives,
-            self.number_of_constraints
+    def create_solution(self) -> BinarySolution:
+        # solution = IntegerSolution(
+        #     self.lower_bound,
+        #     self.upper_bound,
+        #     self.number_of_objectives,
+        #     self.number_of_constraints
+        # )
+        # solution.variables = [np.random.choice(self.upper_bound[0]) for i in range(self.number_of_variables)]
+        solution = BinarySolution(
+            number_of_variables=1,
+            number_of_objectives=1
         )
-        solution.variables = [np.random.choice(self.upper_bound[0]) for i in range(self.number_of_variables)]
+        solution.variables[0] = np.random.choice(self.upper_bound, size=self.number_of_bits)
         return solution
 
     def get_name(self):
         return 'ZDT4'
 
 
-problem = MusicProblem()
+problem = MusicProblem(number_of_bits=12)
 algorithm = GeneticAlgorithm(
     problem=problem,
     offspring_population_size=100,
-    mutation=PolynomialMutation(probability=1.0/problem.number_of_variables, distribution_index=20),
-    crossover=SBXCrossover(probability=1.0, distribution_index=20),
+    mutation=BitFlipMutation(probability=1.0/problem.number_of_bits),
+    crossover=SPXCrossover(0.2),
     termination_criterion=StoppingByEvaluations(max=1000),
     population_size=100,
-    selection=BestSolutionSelection()
+    selection=BinaryTournamentSelection()
 )
+# algorithm = EvolutionStrategy(
+#     problem=problem,
+#     mu=1,
+#     lambda_=10,
+#     mutation=BitFlipMutation(probability=1.0 / problem.number_of_bits),
+#     elitist=True,
+#     termination_criterion=StoppingByEvaluations(max=1000)
+# )
 
 # Used to initialize the algorithm progress bar
 algorithm.observable.register(observer=ProgressBarObserver(max=1000))

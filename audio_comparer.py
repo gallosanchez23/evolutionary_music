@@ -25,7 +25,9 @@ threshold = 0.5
 
 # calculate fingerprint
 def calculate_fingerprints(filename):
-    duration, fp_encoded = acoustid.fingerprint_file(filename)
+    # duration, fp_encoded = acoustid.fingerprint_file(filename)
+    print(filename)
+    duration, fp_encoded = acoustid.fingerprint(samplerate=filename[0], channels=filename[1], pcmiter=filename[2])
 
     fingerprint, version = chromaprint.decode_fingerprint(fp_encoded)
     # print(fingerprint)
