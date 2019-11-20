@@ -23,15 +23,13 @@ min_overlap = 5
 # report match when cross correlation has a peak exceeding threshold
 threshold = 0.5
 
+fingerprint_target = None
+
 # calculate fingerprint
 def calculate_fingerprints(filename):
-    # duration, fp_encoded = acoustid.fingerprint_file(filename)
-    print(filename)
-    duration, fp_encoded = acoustid.fingerprint(samplerate=filename[0], channels=filename[1], pcmiter=filename[2])
+    duration, fp_encoded = acoustid.fingerprint_file(filename)
 
     fingerprint, version = chromaprint.decode_fingerprint(fp_encoded)
-    # print(fingerprint)
-
     return fingerprint
   
 # returns correlation between lists
@@ -53,9 +51,11 @@ def correlation(listx, listy):
     return covariance/32
 
 def correlate(source, target):
-    global span
+    global span, fingerprint_target
     fingerprint_source = calculate_fingerprints(source)
-    fingerprint_target = calculate_fingerprints(target)
+
+    if fingerprint_target is None:
+        fingerprint_target = calculate_fingerprints(target)
     
     span = len(fingerprint_source)
     corr = correlation(fingerprint_source, fingerprint_target)
