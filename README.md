@@ -4,7 +4,6 @@ An audio file to note list interpreter implemented with Evolutionary Algorithms.
 
 ## Instalation
 
----
 Python >3.6 is required. Once that is set up, run:
 
 ```bash
@@ -19,6 +18,3 @@ Evolutionary Music uses **pydub** and **pyacoustid** to evaluate the fitness of 
 - [PyAcoustid dependencies](https://github.com/beetbox/pyacoustid#installation)
 
 ## Quick start
-
----
-
