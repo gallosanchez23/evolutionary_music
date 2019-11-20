@@ -4,16 +4,10 @@ from pydub import AudioSegment
 
 from jmetal.core.problem import BinaryProblem
 from jmetal.core.solution import BinarySolution
-from jmetal.algorithm.multiobjective.nsgaii import NSGAII
 from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
-from jmetal.algorithm.singleobjective.evolution_strategy import EvolutionStrategy
-from jmetal.operator import SBXCrossover, PolynomialMutation, BestSolutionSelection, SPXCrossover, BinaryTournamentSelection, BinaryTournament2Selection
-from jmetal.lab.visualization import Plot, InteractivePlot
+from jmetal.operator import SPXCrossover, BinaryTournamentSelection, BitFlipMutation
 from jmetal.util.termination_criterion import StoppingByEvaluations
-from jmetal.util.observer import ProgressBarObserver, VisualizerObserver, PrintObjectivesObserver
-from jmetal.operator import BitFlipMutation
-from jmetal.core.quality_indicator import FitnessValue
-from jmetal.util.termination_criterion import StoppingByQualityIndicator
+from jmetal.util.observer import ProgressBarObserver, PrintObjectivesObserver
 
 source_audio = AudioSegment.from_file('data/songs/jingle.wav')
 NOTES = [
