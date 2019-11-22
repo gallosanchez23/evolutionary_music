@@ -31,7 +31,7 @@ def calculate_fingerprints(filename):
 
     fingerprint, version = chromaprint.decode_fingerprint(fp_encoded)
     return fingerprint
-  
+
 # returns correlation between lists
 def correlation(listx, listy):
     if len(listx) == 0 or len(listy) == 0:
@@ -42,12 +42,12 @@ def correlation(listx, listy):
         listx = listx[:len(listy)]
     elif len(listx) < len(listy):
         listy = listy[:len(listx)]
-    
+
     covariance = 0
     for i in range(len(listx)):
         covariance += 32 - bin(listx[i] ^ listy[i]).count("1")
     covariance = covariance / float(len(listx))
-    
+
     return covariance/32
 
 def correlate(source, target):
@@ -56,7 +56,7 @@ def correlate(source, target):
 
     if fingerprint_target is None:
         fingerprint_target = calculate_fingerprints(target)
-    
+
     span = len(fingerprint_source)
     corr = correlation(fingerprint_source, fingerprint_target)
     return corr
