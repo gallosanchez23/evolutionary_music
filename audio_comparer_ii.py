@@ -35,7 +35,8 @@ class AudioComparer():
 		target = self.target_fingerprint
 
 		if len(source) == 0 or len(target) == 0:
-			raise Exception('Empty lists cannot be correlated.')
+			# raise Exception('Empty lists cannot be correlated.')
+			return 0.0
 
 		if len(source) > len(target):
 			source = source[:len(target)]

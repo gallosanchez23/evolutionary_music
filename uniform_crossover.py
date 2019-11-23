@@ -12,7 +12,7 @@ class UniformCrossover(Crossover[BinarySolution, BinarySolution]):
 		super(UniformCrossover, self).__init__(probability = probability)
 
 	def execute(self, parents: List[BinarySolution]) -> List[BinarySolution]:
-		# validate precense of only two parents
+		# validate presence of only two parents
 		if len(parents) != 2:
 			raise Exception('The number of parents is not two: {}'.format(len(parents)))
 
