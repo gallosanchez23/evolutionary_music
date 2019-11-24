@@ -15,6 +15,18 @@ class NotesDirectory():
 			'S'
 		]
 
+		# List with the frequencies of all available notes
+		self.NOTE_FREQUENCIES = [
+			110.0, 220.0, 440.0, 880.0, 1760.0, 3520.0,
+			123.47, 246.94, 493.88, 987.77, 1975.53, 3951.07,
+			65.41, 130.81, 261.63, 523.25, 1046.50, 2093.00,
+			73.42, 146.83, 293.66, 587.33, 1174.66, 2349.32,
+			82.41, 164.81, 329.63, 659.26, 1318.51, 2637.02,
+			87.31, 174.61, 349.23, 698.46, 1396.91, 2793.83,
+			98.0, 196.0, 392.0, 783.99, 1567.98, 3135.96,
+			0.0
+		]
+
 		# List with audio of each note on NOTES
 		self.AUDIO_NOTES = []
 
@@ -22,9 +34,6 @@ class NotesDirectory():
 			self.AUDIO_NOTES.append(
 				AudioSegment.from_wav(f'data/half_notes/{note}.wav')
 			)
-
-	def get_note(self, index: int) -> AudioSegment:
-		return self.AUDIO[index]
 
 	def get_audio_note(self, index: int) -> AudioSegment:
 		return self.AUDIO_NOTES[index]

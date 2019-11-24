@@ -2,3 +2,4 @@
 __pycache__/
 accurate_runs/
 jmetalpy.log
+em_env/

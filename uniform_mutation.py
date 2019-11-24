@@ -13,7 +13,7 @@ class UniformMutation(Mutation[BinarySolution]):
 		offspring = solution.variables
 		popsize = len(solution.variables[0])
 
-		values = np.random.choice(42, popsize)
+		values = [np.random.choice(solution.variables[1][i]) for i in range(popsize)]
 		probs = np.random.uniform(0, 1, popsize)
 
 		for i in range(popsize):

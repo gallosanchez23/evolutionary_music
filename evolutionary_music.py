@@ -20,7 +20,7 @@ def generate_audio_file(notes):
 
 
 target_file = 'data/songs/ode_to_joy.wav'
-number_of_notes = 10
+number_of_notes = 16
 problem = MusicProblem(target_file, number_of_notes)
 population_size = 100
 max_evaluations = 5000

@@ -1,13 +1,11 @@
 import acoustid
 import chromaprint
 
-#from fuzzywuzzy import fuzz
-
 class AudioComparer():
 
-	def __init__(self):
-		self.target_name = None
-		self.target_fingerprint = None
+	def __init__(self, target_name):
+		self.target_name = target_name
+		self.target_fingerprint = self.get_fingerprint(target_name)
 
 	def get_fingerprint(self, file_name):
 		duration, fp_encoded = acoustid.fingerprint_file(file_name)
@@ -15,18 +13,9 @@ class AudioComparer():
 
 		return fingerprint
 
-	def set_target(self, target_name: str):
-		self.target_name = target_name
-
-		fingerprint = self.get_fingerprint(target_name)
-
-		self.target_fingerprint = fingerprint
-
 	def compare(self, source_name: str):
 		fingerprint = self.get_fingerprint(source_name)
 
-		#correlation = fuzz.ratio(fingerprint, self.target_fingerprint)
-		#return float(correlation) / float(100)
 		correlation = self.correlation(fingerprint)
 		return correlation
 
@@ -35,7 +24,6 @@ class AudioComparer():
 		target = self.target_fingerprint
 
 		if len(source) == 0 or len(target) == 0:
-			# raise Exception('Empty lists cannot be correlated.')
 			return 0.0
 
 		if len(source) > len(target):
