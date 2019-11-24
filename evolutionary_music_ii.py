@@ -10,13 +10,6 @@ from jmetal.algorithm.singleobjective.genetic_algorithm import GeneticAlgorithm
 from uniform_crossover import UniformCrossover
 from uniform_mutation import UniformMutation
 
-# notes = NotesDirectory()
-
-# combined = AudioSegment.empty()
-# combined = notes.AUDIO_NOTES[27] + notes.AUDIO_NOTES[21] + notes.AUDIO_NOTES[27] + notes.AUDIO_NOTES[21] + notes.AUDIO_NOTES[27] + notes.AUDIO_NOTES[8] + notes.AUDIO_NOTES[21] + notes.AUDIO_NOTES[15] + notes.AUDIO_NOTES[2]
-
-# combined.export('data/songs/elise2.wav', format='wav')
-
 def generate_audio_file(notes):
 	notes_directory = NotesDirectory()
 
@@ -26,7 +19,7 @@ def generate_audio_file(notes):
 	combined.export('data/conc.wav', format = 'wav')
 
 
-target_file = 'data/songs/elise2.wav'
+target_file = 'data/songs/ode_to_joy.wav'
 number_of_notes = 10
 problem = MusicProblem(target_file, number_of_notes)
 population_size = 100
