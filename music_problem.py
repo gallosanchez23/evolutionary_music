@@ -37,7 +37,11 @@ class MusicProblem(BinaryProblem):
 				min_freq = max([frequency[i] - range_constant, 0])
 				max_freq = frequency[i] + range_constant
 				candidate_notes = \
-					filter(lambda i: self.notes_directory.NOTE_FREQUENCIES[i] >= min_freq and self.notes_directory.NOTE_FREQUENCIES[i] <= max_freq, range(self.number_of_available_notes))
+					filter(
+						lambda i: self.notes_directory.NOTE_FREQUENCIES[i] >= min_freq 
+						and self.notes_directory.NOTE_FREQUENCIES[i] <= max_freq, 
+						range(self.number_of_available_notes)
+					)
 				candidates.append(list(candidate_notes))
 			else:
 				candidates.append(list(range(self.number_of_available_notes)))
