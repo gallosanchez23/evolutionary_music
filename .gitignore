@@ -1,5 +1,12 @@
+.ipynb_checkpoints/
 .vscode/
 __pycache__/
 accurate_runs/
 jmetalpy.log
 em_env/
+.DS_Store
+reference/
+results/
+data/
+*.zip
+*.csv

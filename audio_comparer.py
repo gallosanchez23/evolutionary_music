@@ -7,16 +7,20 @@ from scipy import stats, signal
 from scipy.io import wavfile as wav
 from scipy.fftpack import rfft
 from sklearn.metrics import mean_squared_error
+from numpy.fft import fftn
 
 
 class AudioComparer():
 
 	def __init__(self, target_name):
 		self.target_name = target_name
-		self.target_fingerprint = self.get_fingerprint(target_name)
+		#self.target_fingerprint = self.get_fingerprint(target_name)
 
 		rate, data = wav.read(target_name)
-		self.target_fft = rfft(data)
+		self.target_rate = rate
+		# Split the audio channels, and perform a FFT on them.
+		self.target_left_fft = 2.0 * np.abs(fftn(np.array(data)[:, 0])/len(np.array(data)[:, 0]))
+		self.target_right_fft = 2.0 * np.abs(fftn(np.array(data)[:, 1])/len(np.array(data)[:, 1]))
 
 	def get_fingerprint(self, file_name):
 		duration, fp_encoded = acoustid.fingerprint_file(file_name)
@@ -24,7 +28,7 @@ class AudioComparer():
 
 		return fingerprint
 
-	def compare(self, source_name: str, comparison='fingerprint'):
+	def compare(self, source_name: str, comparison='fft'):
 		if comparison == 'fingerprint':
 			fingerprint = self.get_fingerprint(source_name)
 
@@ -55,8 +59,24 @@ class AudioComparer():
 
 	def fft_compare(self, file_name):
 		rate, data = wav.read(file_name)
-		fft_out = rfft(data)
-		return mean_squared_error(self.target_fft, fft_out)
+
+		left_fft = 2.0 * np.abs(fftn(np.array(data)[:, 0])/len(np.array(data)[:, 0]))
+		right_fft = 2.0 * np.abs(fftn(np.array(data)[:, 1])/len(np.array(data)[:, 1]))
+
+		length = min(len(self.target_left_fft), len(left_fft))
+
+		# Get the mean squared error of the power spectrum of each separate channel.
+		left_error = mean_squared_error(
+			left_fft[:length//2],
+			self.target_left_fft[:length//2]
+		)
+
+		right_error = mean_squared_error(
+			right_fft[:length//2],
+			self.target_right_fft[:length//2]
+		)
+		
+		return (left_error + right_error) / 2
 		
 
 	def get_ms_frames(self, segment, ms=350):

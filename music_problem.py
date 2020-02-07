@@ -26,7 +26,7 @@ class MusicProblem(BinaryProblem):
 		self.note_candidates = self.set_frequency_ranges()
 
 	def set_frequency_ranges(self):
-		range_constant = 50 # List is empty, check what to do
+		range_constant = 150 # List is empty, check what to do
 		
 		sr, audio = wavfile.read(self.audio_comparer.target_name)
 
@@ -55,7 +55,7 @@ class MusicProblem(BinaryProblem):
 		combined.export('data/conc.wav', format='wav')
 
 		solution.objectives[0] = \
-			self.audio_comparer.compare('data/conc.wav') * -1
+			self.audio_comparer.compare('data/conc.wav')
 
 		return solution
 
