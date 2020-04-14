@@ -14,7 +14,7 @@ class AudioComparer():
 
 	def __init__(self, target_name):
 		self.target_name = target_name
-		#self.target_fingerprint = self.get_fingerprint(target_name)
+		self.target_fingerprint = self.get_fingerprint(target_name)
 
 		rate, data = wav.read(target_name)
 		self.target_rate = rate
@@ -36,6 +36,10 @@ class AudioComparer():
 			return correlation
 		elif comparison == 'fft':
 			return self.fft_compare(source_name)
+		elif comparison == 'corr':
+			return self.corr(source_name)
+		elif comparison == 'mse':
+			return self.mse(source_name)
 		# return self.signal_to_noise(source_name)
 
 	def correlation(self, source_fingerprint):
@@ -56,6 +60,12 @@ class AudioComparer():
 		covariance = covariance / float(len(source))
 
 		return covariance / 32
+
+	def fft_compare(self, file_name):
+		rate, data = wav.read(file_name)
+		t_rate, t_data = wav.read(self.target_name)
+
+		mean_squared_error
 
 	def fft_compare(self, file_name):
 		rate, data = wav.read(file_name)
@@ -99,7 +109,6 @@ class AudioComparer():
 		ratio = self.signaltonoise(np_added)
 		print(ratio)
 		return ratio
-
 
 	def signaltonoise(a, axis=0, ddof=0):
 		a = np.asanyarray(a)
