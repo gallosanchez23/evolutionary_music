@@ -39,4 +39,4 @@ for f in onlyfiles:
             else:
                 song_df[str(j)] = [front[j]]
     song_df = pd.DataFrame(song_df)
-    song_df.to_csv(join(results_dest_path,f.split(".")[0] + "_poly_fft_candidates.csv"))
+    song_df.to_csv(join(results_dest_path,f.split(".")[0] + "_poly.csv"))

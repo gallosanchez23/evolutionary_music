@@ -4,6 +4,7 @@ from pydub import AudioSegment
 import numpy as np
 from scipy import stats, signal
 
+from scipy.stats.stats import pearsonr   
 from scipy.io import wavfile as wav
 from scipy.fftpack import rfft
 from sklearn.metrics import mean_squared_error
@@ -17,6 +18,7 @@ class AudioComparer():
 		self.target_fingerprint = self.get_fingerprint(target_name)
 
 		rate, data = wav.read(target_name)
+		self.target_data = data
 		self.target_rate = rate
 		# Split the audio channels, and perform a FFT on them.
 		self.target_left_fft = 2.0 * np.abs(fftn(np.array(data)[:, 0])/len(np.array(data)[:, 0]))
@@ -28,7 +30,7 @@ class AudioComparer():
 
 		return fingerprint
 
-	def compare(self, source_name: str, comparison='fft'):
+	def compare(self, source_name: str, comparison='mse'):
 		if comparison == 'fingerprint':
 			fingerprint = self.get_fingerprint(source_name)
 
@@ -61,11 +63,20 @@ class AudioComparer():
 
 		return covariance / 32
 
-	def fft_compare(self, file_name):
+	def corr(self, file_name):
 		rate, data = wav.read(file_name)
-		t_rate, t_data = wav.read(self.target_name)
 
-		mean_squared_error
+		return pearsonr(self.target_data, data)
+
+	def mse(self, file_name):
+		rate, data = wav.read(file_name)
+		t_data = self.target_data
+		if len(t_data) > len(data):
+			t_data = t_data[:len(data)]
+		elif len(data) > len(t_data):
+			data = data[:len(t_data)]
+
+		return mean_squared_error(t_data, data)
 
 	def fft_compare(self, file_name):
 		rate, data = wav.read(file_name)
