@@ -14,7 +14,7 @@ class MusicProblem(BinaryProblem):
 
 	def __init__(self, target_name: str, number_of_notes: int):
 		self.number_of_notes = number_of_notes
-		self.number_of_variables = 2
+		self.number_of_variables = 2 # Change to add time interval fitness
 		self.number_of_objectives = 1
 		self.number_of_constraints = 0
 		self.number_of_available_notes = 42
@@ -26,7 +26,8 @@ class MusicProblem(BinaryProblem):
 		self.note_candidates = self.set_frequency_ranges()
 
 	def set_frequency_ranges(self):
-		range_constant = 50
+		range_constant = 150 # List is empty, check what to do
+		
 		sr, audio = wavfile.read(self.audio_comparer.target_name)
 
 		time, frequency, confidence, activation = crepe.predict(audio, sr, step_size=350)
@@ -38,8 +39,8 @@ class MusicProblem(BinaryProblem):
 				max_freq = frequency[i] + range_constant
 				candidate_notes = \
 					filter(
-						lambda i: self.notes_directory.NOTE_FREQUENCIES[i] >= min_freq 
-						and self.notes_directory.NOTE_FREQUENCIES[i] <= max_freq, 
+						lambda i: self.notes_directory.get_note_frequency(i) >= min_freq 
+						and self.notes_directory.get_note_frequency(i) <= max_freq, 
 						range(self.number_of_available_notes)
 					)
 				candidates.append(list(candidate_notes))
@@ -54,7 +55,7 @@ class MusicProblem(BinaryProblem):
 		combined.export('data/conc.wav', format='wav')
 
 		solution.objectives[0] = \
-			-1 * self.audio_comparer.compare('data/conc.wav')
+			self.audio_comparer.compare('data/conc.wav')
 
 		return solution
 
