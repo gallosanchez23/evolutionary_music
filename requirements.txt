@@ -9,7 +9,7 @@ cloudpickle==1.2.2
 crepe==0.0.9
 cycler==0.10.0
 dask==1.2.2
-distributed==1.28.1
+distributed==2021.10.0
 fuzzywuzzy==0.17.0
 gast==0.2.2
 google-auth==1.7.1
