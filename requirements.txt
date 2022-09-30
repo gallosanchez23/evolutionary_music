@@ -22,7 +22,7 @@ hmmlearn==0.2.2
 idna==2.8
 imageio==2.6.1
 jmetalpy==1.5.1
-joblib==0.14.0
+joblib==1.2.0
 Keras-Applications==1.0.8
 Keras-Preprocessing==1.1.0
 kiwisolver==1.1.0
