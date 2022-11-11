@@ -48,7 +48,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.7
 pydub==0.23.1
 pyparsing==2.4.4
-pyspark==2.4.4
+pyspark==3.2.2
 python-dateutil==2.8.1
 pytz==2019.3
 PyYAML==5.1.2
